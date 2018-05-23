@@ -90,25 +90,6 @@ class InputScreen extends React.Component {
   }
 }
 
-class HomeScreen extends React.Component {
-  constructor(props) {
-    super(props);
-    this.handleContinue = this.handleContinue.bind(this);
-  }
-
-  handleContinue() {
-    this.props.onContinue('withdrawalAccount');
-  }
-
-  render() {
-    return (
-      <div onClick={this.handleContinue}>
-        <p>HOME SCREEN PLACEHOLDER</p>
-      </div>
-    );
-  }
-}
-
 class OptionScreen extends React.Component {
   constructor(props) {
     super(props);
@@ -120,31 +101,81 @@ class OptionScreen extends React.Component {
   }
 
   render() {
-    const twoColumns = (this.props.options.length > 3);
-    var options = this.props.options;
-    if (twoColumns) {
-      const odd = this.props.options.filter(function(element, index, array) {
-        return (index % 2 !== 0);
-      });
-      const even = this.props.options.filter(function(element, index, array) {
-        return (index % 2 === 0);
-      });
-      options = even.concat(odd);
+    const options = this.props.options,
+      twoColumns = (this.props.options.length > 3);
+
+    function option(index, width) {
+      return (
+        <div key={index} className="option" style={{"width": width}}>
+          <div className="button" onClick={(e) => this.handleClick(index, e)}>{options[index]}</div>
+        </div>
+      );
     }
-    const optionRows = options.map((option, index) =>
-      <div key={index} className="option" style={{"width": twoColumns ? "40%" : "100%"}}>
-        <div className="button" onClick={(e) => this.handleClick(index, e)}>{option}</div>
-      </div>
-    );
+
+    var optionElements = [];
+    if (twoColumns) {
+      for (let i = 0; i < options.length; i += 2) {
+        optionElements.push(option.call(this, i, "40%"));
+      }
+      for (let i = 1; i < options.length; i += 2) {
+        optionElements.push(option.call(this, i, "40%"));
+      }
+    } else {
+      for (let i = 0; i < options.length; i++) {
+        optionElements.push(option.call(this, i, "90%"));
+      }
+    }
+
     return (
       <div>
         <div className="prompt">
           <p>{this.props.prompt}</p>
         </div>
         <div className="options">
-          {optionRows}
+          {optionElements}
         </div>
       </div>
+    );
+  }
+}
+
+class HomeScreen extends React.Component {
+  constructor(props) {
+    super(props);
+    this.setScreen = this.setScreen.bind(this);
+  }
+
+  setScreen(to, options) {
+    switch (to) {
+      case 0:
+        this.props.onContinue('withdrawalAccount');
+        break;
+      default:
+        this.props.onContinue('error');
+        break;
+    }
+  }
+
+  render() {
+    const homeOptions = [
+      'Withdrawal',
+      'Deposit',
+      'View Balance',
+      'Transfer',
+      'Language',
+      'Help'
+    ];
+    const prompt = (
+      <React.Fragment>
+        Welcome!<br />
+        Please choose an option
+      </React.Fragment>
+    );
+    return (
+      <OptionScreen
+          prompt={prompt}
+          options={homeOptions}
+          callback={this.setScreen} />
     );
   }
 }
@@ -320,12 +351,12 @@ class ATM extends React.Component {
       withdrawalAccount:
         <OptionScreen
           prompt="Choose an account"
-          options={withdrawalAccountOptions} 
+          options={withdrawalAccountOptions}
           callback={this.setWithdrawalAccount} />,
       withdrawal:
         <OptionScreen
           prompt="Choose an amount"
-          options={withdrawalOptions} 
+          options={withdrawalOptions}
           callback={this.setWithdrawal} />,
       withdrawalCustom:
         <InputScreen
