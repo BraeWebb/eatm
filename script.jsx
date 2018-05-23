@@ -4,6 +4,19 @@ Screens
 ====================
 */
 
+class ErrorScreen extends React.Component {
+  render() {
+    return (
+      <div>
+        <div className="prompt">
+          <h1>Error</h1>
+          <p>404 Not Found</p>
+        </div>
+      </div>
+    );
+  }
+}
+
 class LandingScreen extends React.Component {
   constructor(props) {
     super(props);
@@ -17,8 +30,10 @@ class LandingScreen extends React.Component {
   render() {
     return (
       <div onClick={this.handleContinue}>
-        <h1>Welcome to BankX</h1>
-        <p>Touch screen to begin</p>
+        <div className="prompt">
+          <h1>Welcome to <span className="bank">Bank<strong>X</strong></span></h1>
+          <p>Touch screen to begin</p>
+        </div>
       </div>
     );
   }
@@ -37,30 +52,39 @@ class ScanCardScreen extends React.Component {
   render() {
     return (
       <div onClick={this.handleContinue}>
-        <p>Please place your card on the reader</p>
+        <div className="prompt">
+          <p>Please place your card on the reader</p>
+        </div>
       </div>
     );
   }
 }
 
-class PINScreen extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
+class InputScreen extends React.Component {
   UNSAFE_componentWillUpdate(nextProps, nextState) {
     // this is probably unsafe...
     // but it seems to work without either an error or a warning
     if (nextProps.ok == true) {
-      this.props.onContinue('home');
+      this.props.callback(this.props.input);
     }
   }
 
   render() {
+    var prefix = this.props.type == 'amount' ? '$' : '';
+    var type;
+
+    if (this.props.type == 'amount') {
+      type = 'number';
+    } else {
+      type = this.props.type;
+    }
+
     return (
       <div>
-        <p>Please enter your PIN</p>
-        <input type="password" value={this.props.input} readOnly="true" />
+        <div className="prompt">
+          <p>{this.props.prompt}</p>
+          <p>{prefix}<input type={type} value={this.props.input} readOnly="true" /></p>
+        </div>
       </div>
     );
   }
@@ -73,7 +97,7 @@ class HomeScreen extends React.Component {
   }
 
   handleContinue() {
-    this.props.onContinue('withdrawAccount');
+    this.props.onContinue('withdrawalAccount');
   }
 
   render() {
@@ -92,20 +116,32 @@ class OptionScreen extends React.Component {
   }
 
   handleClick(index, e) {
-    this.props.options[index].callback();
-    this.props.onContinue(this.props.continueTo);
+    this.props.callback(index, this.props.options);
   }
 
   render() {
-    const optionRows = this.props.options.map((option, index) =>
-      <div key={index} className="col-xs-12">
-        <div className="button" onClick={(e) => this.handleClick(index, e)}>{option.name}</div>
+    const twoColumns = (this.props.options.length > 3);
+    var options = this.props.options;
+    if (twoColumns) {
+      const odd = this.props.options.filter(function(element, index, array) {
+        return (index % 2 !== 0);
+      });
+      const even = this.props.options.filter(function(element, index, array) {
+        return (index % 2 === 0);
+      });
+      options = even.concat(odd);
+    }
+    const optionRows = options.map((option, index) =>
+      <div key={index} className="option" style={{"width": twoColumns ? "40%" : "100%"}}>
+        <div className="button" onClick={(e) => this.handleClick(index, e)}>{option}</div>
       </div>
     );
     return (
       <div>
-        <p>{this.props.prompt}</p>
-        <div className="row around-xs">
+        <div className="prompt">
+          <p>{this.props.prompt}</p>
+        </div>
+        <div className="options">
           {optionRows}
         </div>
       </div>
@@ -164,15 +200,16 @@ class ATM extends React.Component {
     this.popScreen = this.popScreen.bind(this);
     this.goBack = this.goBack.bind(this);
     this.setOk = this.setOk.bind(this);
-    this.setAccountToSavings = this.setAccountToSavings.bind(this);
-    this.setAccountToCheque = this.setAccountToCheque.bind(this);
-    this.setAccountToCredit = this.setAccountToCredit.bind(this);
+    this.setPin = this.setPin.bind(this);
+    this.setWithdrawalAccount = this.setWithdrawalAccount.bind(this);
+    this.setWithdrawal = this.setWithdrawal.bind(this);
+    this.setAmount = this.setAmount.bind(this);
 
     // i think this is all we need to keep track of
     this.state = {
       input: '',
       screen: 'landing',
-      crumbs: [0],
+      crumbs: ['landing'],
       ok: false,
       card: false,
       amount: 0,
@@ -198,6 +235,7 @@ class ATM extends React.Component {
 
   pushScreen(key) {
     this.setState({
+      input: '',
       screen: key,
       crumbs: this.state.crumbs.concat([key]),
       ok: false,
@@ -224,38 +262,82 @@ class ATM extends React.Component {
     this.setState({ok: true});
   }
 
-  setAccountToSavings() {
-    this.setState({account: 'Savings'});
+  setPin(value) {
+    this.pushScreen('home');
   }
 
-  setAccountToCheque() {
-    this.setState({account: 'Cheque'});
+  setWithdrawalAccount(to, options) {
+    this.setState({account: options[to]});
+    this.pushScreen('withdrawal');
   }
 
-  setAccountToCredit() {
-    this.setState({account: 'Credit'});
+  setWithdrawal(to, options) {
+    switch (to) {
+      case 0:
+      case 1:
+      case 2:
+      case 3:
+        this.setAmount(options[to]);
+        break;
+      case 4:
+        this.pushScreen('withdrawalCustom');
+        break;
+      case 5:
+        this.pushScreen('withdrawalFavourite');
+        break;
+    }
+  }
+
+  setAmount(value) {
+    this.setState({amount: value});
+    this.pushScreen('withdrawalConfirmation');
   }
 
   render() {
-    const withdrawAccountOptions = [
-      {name: 'Savings', callback: this.setAccountToSavings},
-      {name: 'Cheque', callback: this.setAccountToCheque},
-      {name: 'Credit', callback: this.setAccountToCredit}
-    ];
+    const withdrawalAccountOptions = ['Savings', 'Cheque', 'Credit'];
+    const withdrawalOptions = ['$20', '$50', '$100', '$200', 'Custom Amount', 'Favourite Withdrawal'];
     // the array keys are used to identify screens
     const screens = {
-      /*
-      -1: Error
-      */
-      landing: <LandingScreen onContinue={this.pushScreen} />,
-      card: <ScanCardScreen input={this.state.input} onContinue={this.pushScreen} />,
-      pin: <PINScreen input={this.state.input} ok={this.state.ok} onContinue={this.pushScreen} />,
-      home: <HomeScreen onContinue={this.pushScreen} />,
-      withdrawAccount: <OptionScreen prompt="Choose an account" options={withdrawAccountOptions} onContinue={this.pushScreen} continueTo="landing" />
-      /*
-      98: Transaction pending
-      99: Transaction complete
-      */
+      error:
+        <ErrorScreen />,
+      landing:
+        <LandingScreen
+          onContinue={this.pushScreen} />,
+      card:
+        <ScanCardScreen
+          input={this.state.input}
+          onContinue={this.pushScreen} />,
+      pin:
+        <InputScreen
+          prompt="Please enter your PIN"
+          type="password"
+          input={this.state.input}
+          ok={this.state.ok}
+          callback={this.setPin} />,
+      home:
+        <HomeScreen
+          onContinue={this.pushScreen} />,
+      withdrawalAccount:
+        <OptionScreen
+          prompt="Choose an account"
+          options={withdrawalAccountOptions} 
+          callback={this.setWithdrawalAccount} />,
+      withdrawal:
+        <OptionScreen
+          prompt="Choose an amount"
+          options={withdrawalOptions} 
+          callback={this.setWithdrawal} />,
+      withdrawalCustom:
+        <InputScreen
+          prompt="Please enter an amount"
+          type="amount"
+          input={this.state.input}
+          ok={this.state.ok}
+          callback={this.setAmount} />,
+      withdrawalFavourite:
+        <ErrorScreen />,
+      withdrawalConfirmation:
+        <ErrorScreen />
     };
 
     return (
@@ -264,7 +346,7 @@ class ATM extends React.Component {
           <div className="atm">
             <div className="row center-xs">
               <div className="col-xs-8">
-                <h1 className="bank">BankX</h1>
+                <h1 className="bank">Bank<strong>X</strong></h1>
                 <div className="screen">
                   <Breadcrumbs />
                   {screens[this.state.screen]}
