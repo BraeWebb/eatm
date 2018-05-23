@@ -24,9 +24,14 @@ body {
 }
 
 .bank {
+  font-family: 'Orbitron', sans-serif;
   font-size: 1em;
-  font-weight: normal;
+  font-weight: 500;
   text-align: center;
+}
+
+.bank > strong {
+  font-weight: 700;
 }
 
 .screen {
@@ -34,8 +39,8 @@ body {
   height: 55vmin;
   margin: 0 auto;
   background-color: #eee;
-  border: 2px solid black;
-  border-radius: 0.1em;
+  border: .25vmin solid black;
+  border-radius: 0.2em;
   display: flex;
   flex-direction: column;
 }
@@ -44,13 +49,35 @@ body {
   flex: 0 0 1em;
   height: 1em;
   background-color: yellow;
+  border-radius: .2em .2em 0 0;
 }
 
 .screen > div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   flex: 1 1 100%;
   width: 100%;
   padding: 0.25em;
   overflow: hidden;
+}
+
+.prompt {
+  flex: 0 20%;
+}
+
+.options {
+  display: flex;
+  flex-flow: column wrap;
+  align-items: center;
+  justify-content: space-around;
+  flex: 1 1 100%;
+  width: 100%;
+}
+
+.option {
+  flex: 1 1 33%;
 }
 
 h1 {
@@ -58,13 +85,14 @@ h1 {
 }
 
 p {
-  font-size: 0.7em;
+  font-size: 0.6em;
 }
 
 .button {
   width: 100%;
-  border: 2px solid black;
-  font-size: 0.6em;
+  height: 60%;
+  border: .25vmin solid black;
+  font-size: 0.5em;
 }
 
 .keypad {
@@ -84,7 +112,7 @@ p {
   font-size: 1em;
   min-width: 25%;
   display: table-cell;
-  border: 2px solid black;
+  border: .25vmin solid black;
   text-align: center;
   cursor: pointer;
   padding: 0 0.25em;
