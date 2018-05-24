@@ -150,6 +150,9 @@ class HomeScreen extends React.Component {
       case 0:
         this.props.onContinue('withdrawalAccount');
         break;
+      case 5:
+        this.props.onContinue('help');
+        break;
       default:
         this.props.onContinue('error');
         break;
@@ -180,6 +183,26 @@ class HomeScreen extends React.Component {
   }
 }
 
+class YesNoScreen extends React.Component {
+  render() {
+    return (
+      <div>
+        <div className="prompt">
+          <p>{this.props.prompt}</p>
+        </div>
+        <div className="options">
+          <div className="option" style={{"width": "40%"}}>
+            <div className="button" onClick={(e) => this.props.callback(true)}>Yes</div>
+          </div>
+          <div className="option" style={{"width": "40%"}}>
+            <div className="button" onClick={(e) => this.props.callback(false)}>No</div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+}
+
 
 /*
 ====================
@@ -199,7 +222,7 @@ class Breadcrumbs extends React.Component {
 
   render() {
     return (
-      <nav className="breadcrumbs" onClick={this.handleClick}></nav>
+      <nav className="breadcrumbs" onClick={this.handleClick}>{this.props.crumbs}</nav>
     );
   }
 }
@@ -231,10 +254,12 @@ class ATM extends React.Component {
     this.popScreen = this.popScreen.bind(this);
     this.goBack = this.goBack.bind(this);
     this.setOk = this.setOk.bind(this);
+    this.scanCard = this.scanCard.bind(this);
     this.setPin = this.setPin.bind(this);
     this.setWithdrawalAccount = this.setWithdrawalAccount.bind(this);
     this.setWithdrawal = this.setWithdrawal.bind(this);
     this.setAmount = this.setAmount.bind(this);
+    this.callSupport = this.callSupport.bind(this);
 
     // i think this is all we need to keep track of
     this.state = {
@@ -293,6 +318,10 @@ class ATM extends React.Component {
     this.setState({ok: true});
   }
 
+  scanCard(value) {
+    this.setState({card: true});
+  }
+
   setPin(value) {
     this.pushScreen('home');
   }
@@ -322,6 +351,14 @@ class ATM extends React.Component {
   setAmount(value) {
     this.setState({amount: value});
     this.pushScreen('withdrawalConfirmation');
+  }
+
+  callSupport(call) {
+    if (call) {
+      this.pushScreen('error');
+    } else {
+      this.pushScreen('home');
+    }
   }
 
   render() {
@@ -368,7 +405,11 @@ class ATM extends React.Component {
       withdrawalFavourite:
         <ErrorScreen />,
       withdrawalConfirmation:
-        <ErrorScreen />
+        <ErrorScreen />,
+      help:
+        <YesNoScreen
+          prompt="Do you want to be connected to our 24 hour customer support hotline?"
+          callback={this.callSupport} />
     };
 
     return (
@@ -379,12 +420,17 @@ class ATM extends React.Component {
               <div className="col-xs-8">
                 <h1 className="bank">Bank<strong>X</strong></h1>
                 <div className="screen">
-                  <Breadcrumbs />
+                  <Breadcrumbs crumbs={this.state.crumbs} />
                   {screens[this.state.screen]}
                 </div>
               </div>
             </div>
             <div className="row center-xs">
+              <div className="col-xs-2">
+                <div className="cash-out" onClick={this.grabCash} />
+                <div className="cheque-insert" onClick={this.insertCheque} />
+                <div className="cash-insert" onClick={this.insertCash} />
+              </div>
               <div className="col-xs-7">
                 <div className="keypad">
                   <div className="keypad-row">
@@ -412,6 +458,9 @@ class ATM extends React.Component {
                     <Key keyValue="OK" onClick={this.setOk} />
                   </div>
                 </div>
+              </div>
+              <div className="col-xs-3">
+                <div className="scanner" onClick={this.scanCard} />
               </div>
             </div>
           </div>
