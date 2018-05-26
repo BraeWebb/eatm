@@ -24,6 +24,7 @@ class ATM extends React.Component {
     this.setWithdrawal = this.setWithdrawal.bind(this);
     this.setAmount = this.setAmount.bind(this);
     this.callSupport = this.callSupport.bind(this);
+    this.replay = this.replay.bind(this);
 
     // i think this is all we need to keep track of
     this.state = {
@@ -41,8 +42,18 @@ class ATM extends React.Component {
       chequeInLight: false,
       cashInLight: false,
       cashOutLight: false,
-      favourites: []
+      favourites: [],
+      time: new Date()
     };
+
+    this.history = [this.state];
+    this.change = new Date();
+  }
+
+  componentWillUpdate(nextProps, nextState) {
+    nextState.time = (new Date()) - this.change;
+    this.change = new Date();
+    this.history.push(nextState);
   }
 
   handleInput(value) {
@@ -130,6 +141,20 @@ class ATM extends React.Component {
     } else {
       this.returnHome();
     }
+  }
+
+  replay() {
+    this.makeAction(this, this.history);
+  }
+
+  makeAction(atm, history) {
+    if (history.length <= 0) {
+      return;
+    }
+    setTimeout((() => {
+      this.setState(history[0]);
+      this.makeAction(atm, history.splice(1, history.length-1))
+    }).bind(this), history[0].time);
   }
 
   render() {
@@ -234,6 +259,9 @@ class ATM extends React.Component {
               <div className="col-xs-3">
                 <div className="scanner" onClick={this.scanCard} />
               </div>
+            </div>
+            <div className="row center-xs">
+              <div className="replay" onClick={this.replay}>Replay</div>
             </div>
           </div>
         </div>
