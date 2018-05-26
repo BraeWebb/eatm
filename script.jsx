@@ -70,10 +70,10 @@ class InputScreen extends React.Component {
   }
 
   render() {
-    var prefix = this.props.type == 'amount' ? '$' : '';
-    var type;
+    let prefix = this.props.type === 'amount' ? '$' : '';
+    let type;
 
-    if (this.props.type == 'amount') {
+    if (this.props.type === 'amount') {
       type = 'number';
     } else {
       type = this.props.type;
@@ -112,7 +112,7 @@ class OptionScreen extends React.Component {
       );
     }
 
-    var optionElements = [];
+    let optionElements = [];
     if (twoColumns) {
       for (let i = 0; i < options.length; i += 2) {
         optionElements.push(option.call(this, i, "40%"));
@@ -245,7 +245,7 @@ class Key extends React.Component {
   }
 
   render() {
-    var classes = this.props.keyValue.length > 1 ? 'key small' : 'key';
+    let classes = this.props.keyValue.length > 1 ? 'key small' : 'key';
     return (
       <div className={classes} onClick={this.handleClick}>{this.props.keyValue}</div>
     );
@@ -310,7 +310,7 @@ class ATM extends React.Component {
   }
 
   popScreen(n) {
-    var crumbs = this.state.crumbs.slice(0, this.state.crumbs.length - n);
+    let crumbs = this.state.crumbs.slice(0, this.state.crumbs.length - n);
     if (crumbs.length < 1) {
       return;
     }
