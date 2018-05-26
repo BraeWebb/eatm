@@ -317,6 +317,13 @@ class ATM extends React.Component {
     this.setState({screen: crumbs[crumbs.length - 1], crumbs: crumbs});
   }
 
+  returnHome() {
+    let index = this.state.crumbs.indexOf('home');
+    if (index !== -1) {
+      this.popScreen(this.state.crumbs.length - index - 1);
+    }
+  }
+
   goBack(value) {
     this.popScreen(1);
   }
@@ -364,7 +371,7 @@ class ATM extends React.Component {
     if (call) {
       this.pushScreen('error');
     } else {
-      this.pushScreen('home');
+      this.returnHome();
     }
   }
 
