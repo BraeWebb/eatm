@@ -21,6 +21,7 @@ body {
   background-color: #ccc;
   margin: 0 auto;
   user-select: none;
+  padding-top: .5em;
 }
 
 .bank {
