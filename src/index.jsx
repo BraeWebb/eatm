@@ -1,256 +1,13 @@
-/*
-====================
-Screens
-====================
-*/
+import React from 'react';
+import ReactDOM from 'react-dom';
 
-class ErrorScreen extends React.Component {
-  render() {
-    return (
-      <div>
-        <div className="prompt">
-          <h1>Error</h1>
-          <p>404 Not Found</p>
-        </div>
-      </div>
-    );
-  }
-}
+import BreadCrumb from './components/BreadCrumb';
+import Key from './components/Key';
 
-class LandingScreen extends React.Component {
-  constructor(props) {
-    super(props);
-    this.handleContinue = this.handleContinue.bind(this);
-  }
+import * as Screens from './components/screens';
 
-  handleContinue() {
-    this.props.onContinue('card');
-  }
+import './style.css';
 
-  render() {
-    return (
-      <div onClick={this.handleContinue}>
-        <div className="prompt">
-          <h1>Welcome to <span className="bank">Bank<strong>X</strong></span></h1>
-          <p>Touch screen to begin</p>
-        </div>
-      </div>
-    );
-  }
-}
-
-class ScanCardScreen extends React.Component {
-  constructor(props) {
-    super(props);
-    this.handleContinue = this.handleContinue.bind(this);
-  }
-
-  handleContinue() {
-    this.props.onContinue('pin');
-  }
-
-  render() {
-    return (
-      <div onClick={this.handleContinue}>
-        <div className="prompt">
-          <p>Please place your card on the reader</p>
-        </div>
-      </div>
-    );
-  }
-}
-
-class InputScreen extends React.Component {
-  UNSAFE_componentWillUpdate(nextProps, nextState) {
-    // this is probably unsafe...
-    // but it seems to work without either an error or a warning
-    if (nextProps.ok == true) {
-      this.props.callback(this.props.input);
-    }
-  }
-
-  render() {
-    let prefix = this.props.type === 'amount' ? '$' : '';
-    let type;
-
-    if (this.props.type === 'amount') {
-      type = 'number';
-    } else {
-      type = this.props.type;
-    }
-
-    return (
-      <div>
-        <div className="prompt">
-          <p>{this.props.prompt}</p>
-          <p>{prefix}<input type={type} value={this.props.input} readOnly="true" /></p>
-        </div>
-      </div>
-    );
-  }
-}
-
-class OptionScreen extends React.Component {
-  constructor(props) {
-    super(props);
-    this.handleClick = this.handleClick.bind(this);
-  }
-
-  handleClick(index, e) {
-    this.props.callback(index, this.props.options);
-  }
-
-  render() {
-    const options = this.props.options,
-      twoColumns = (this.props.options.length > 3);
-
-    function option(index, width) {
-      return (
-        <div key={index} className="option" style={{"width": width}}>
-          <div className="button" onClick={(e) => this.handleClick(index, e)}>{options[index]}</div>
-        </div>
-      );
-    }
-
-    let optionElements = [];
-    if (twoColumns) {
-      for (let i = 0; i < options.length; i += 2) {
-        optionElements.push(option.call(this, i, "40%"));
-      }
-      for (let i = 1; i < options.length; i += 2) {
-        optionElements.push(option.call(this, i, "40%"));
-      }
-    } else {
-      for (let i = 0; i < options.length; i++) {
-        optionElements.push(option.call(this, i, "90%"));
-      }
-    }
-
-    return (
-      <div>
-        <div className="prompt">
-          <p>{this.props.prompt}</p>
-        </div>
-        <div className="options">
-          {optionElements}
-        </div>
-      </div>
-    );
-  }
-}
-
-class HomeScreen extends React.Component {
-  constructor(props) {
-    super(props);
-    this.setScreen = this.setScreen.bind(this);
-  }
-
-  setScreen(to, options) {
-    switch (to) {
-      case 0:
-        this.props.onContinue('withdrawalAccount');
-        break;
-      case 5:
-        this.props.onContinue('help');
-        break;
-      default:
-        this.props.onContinue('error');
-        break;
-    }
-  }
-
-  render() {
-    const homeOptions = [
-      'Withdrawal',
-      'Deposit',
-      'View Balance',
-      'Transfer',
-      'Language',
-      'Help'
-    ];
-    const prompt = (
-      <React.Fragment>
-        Welcome!<br />
-        Please choose an option
-      </React.Fragment>
-    );
-    return (
-      <OptionScreen
-          prompt={prompt}
-          options={homeOptions}
-          callback={this.setScreen} />
-    );
-  }
-}
-
-class YesNoScreen extends React.Component {
-  render() {
-    return (
-      <div>
-        <div className="prompt">
-          <p>{this.props.prompt}</p>
-        </div>
-        <div className="options">
-          <div className="option" style={{"width": "40%"}}>
-            <div className="button" onClick={(e) => this.props.callback(true)}>Yes</div>
-          </div>
-          <div className="option" style={{"width": "40%"}}>
-            <div className="button" onClick={(e) => this.props.callback(false)}>No</div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-}
-
-
-/*
-====================
-ATM
-====================
-*/
-
-class Breadcrumbs extends React.Component {
-  constructor(props) {
-    super(props);
-    this.crumbClick = this.crumbClick.bind(this);
-  }
-
-  crumbClick(e) {
-    this.props.changeScreen(e.target.dataset.crumbNumber);
-  }
-
-  render() {
-    let crumbs = this.props.crumbs.map((crumb, index) => {
-      let number = this.props.crumbs.length - index - 1;
-      return <a key={crumb} data-crumb={crumb} data-crumb-number={number}
-                onClick={this.crumbClick}>{crumb} > </a>;
-    });
-    return (
-      <nav className="breadcrumbs">
-          {crumbs.splice(Math.max(0, crumbs.length-3), crumbs.length)}
-      </nav>
-    );
-  }
-}
-
-class Key extends React.Component {
-  constructor(props) {
-    super(props);
-    this.handleClick = this.handleClick.bind(this);
-  }
-
-  handleClick(e) {
-    this.props.onClick(this.props.keyValue);
-  }
-
-  render() {
-    let classes = this.props.keyValue.length > 1 ? 'key small' : 'key';
-    return (
-      <div className={classes} onClick={this.handleClick}>{this.props.keyValue}</div>
-    );
-  }
-}
 
 class ATM extends React.Component {
   constructor(props) {
@@ -381,47 +138,47 @@ class ATM extends React.Component {
     // the array keys are used to identify screens
     const screens = {
       error:
-        <ErrorScreen />,
+        <Screens.ErrorScreen />,
       landing:
-        <LandingScreen
+        <Screens.LandingScreen
           onContinue={this.pushScreen} />,
       card:
-        <ScanCardScreen
+        <Screens.ScanCardScreen
           input={this.state.input}
           onContinue={this.pushScreen} />,
       pin:
-        <InputScreen
+        <Screens.InputScreen
           prompt="Please enter your PIN"
           type="password"
           input={this.state.input}
           ok={this.state.ok}
           callback={this.setPin} />,
       home:
-        <HomeScreen
+        <Screens.HomeScreen
           onContinue={this.pushScreen} />,
       withdrawalAccount:
-        <OptionScreen
+        <Screens.OptionScreen
           prompt="Choose an account"
           options={withdrawalAccountOptions}
           callback={this.setWithdrawalAccount} />,
       withdrawal:
-        <OptionScreen
+        <Screens.OptionScreen
           prompt="Choose an amount"
           options={withdrawalOptions}
           callback={this.setWithdrawal} />,
       withdrawalCustom:
-        <InputScreen
+        <Screens.InputScreen
           prompt="Please enter an amount"
           type="amount"
           input={this.state.input}
           ok={this.state.ok}
           callback={this.setAmount} />,
       withdrawalFavourite:
-        <ErrorScreen />,
+        <Screens.ErrorScreen />,
       withdrawalConfirmation:
-        <ErrorScreen />,
+        <Screens.ErrorScreen />,
       help:
-        <YesNoScreen
+        <Screens.YesNoScreen
           prompt="Do you want to be connected to our 24 hour customer support hotline?"
           callback={this.callSupport} />
     };
@@ -434,7 +191,7 @@ class ATM extends React.Component {
               <div className="col-xs-8">
                 <h1 className="bank">Bank<strong>X</strong></h1>
                 <div className="screen">
-                  <Breadcrumbs crumbs={this.state.crumbs}
+                  <BreadCrumb crumbs={this.state.crumbs}
                                changeScreen={this.popScreen}/>
                   {screens[this.state.screen]}
                 </div>
