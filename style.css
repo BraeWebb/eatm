@@ -47,9 +47,13 @@ body {
 
 .breadcrumbs {
   flex: 0 0 1em;
-  height: 1em;
-  background-color: yellow;
-  border-radius: .2em .2em 0 0;
+  height: 2em;
+  margin: 0 .05em 0 .05em;
+  padding: .5em;
+  background-color: #d6d6d6;
+  border-radius: .5em .5em 0 0;
+  font-size: .4em;
+  font-family: 'Orbitron', sans-serif;
 }
 
 .screen > div {
