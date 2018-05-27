@@ -29,6 +29,7 @@ class ATM extends React.Component {
     this.callSupport = this.callSupport.bind(this);
     this.replay = this.replay.bind(this);
     this.submitSession = this.submitSession.bind(this);
+    this.mouseMove = this.mouseMove.bind(this);
 
     // i think this is all we need to keep track of
     this.state = {
@@ -47,7 +48,8 @@ class ATM extends React.Component {
       cashInLight: false,
       cashOutLight: false,
       favourites: [],
-      time: new Date()
+      time: new Date(),
+      position: {x: 0, y: 0}
     };
 
     let data = localStorage.getItem('session');
@@ -57,12 +59,23 @@ class ATM extends React.Component {
 
     this.history = [this.state];
     this.change = new Date();
+    this.canvas = document.getElementById("overlay").getContext("2d");
+    this.canvas.fillStyle = "#FF0000";
+    this.position = {x: 0, y: 0};
   }
 
   componentWillUpdate(nextProps, nextState) {
     nextState.time = (new Date()) - this.change;
+    nextState.position = this.position;
     this.change = new Date();
     this.history.push(nextState);
+  }
+
+  mouseMove(event) {
+    this.position = {
+      x: event.clientX/window.innerWidth,
+      y: event.clientY/window.innerHeight
+    };
   }
 
   handleInput(value) {
@@ -162,6 +175,14 @@ class ATM extends React.Component {
     }
     setTimeout((() => {
       this.setState(history[0]);
+
+      if (history[0].position) {
+        let x = history[0].position.x * this.canvas.canvas.width;
+        let y = history[0].position.y * this.canvas.canvas.height;
+
+        this.canvas.fillRect(x, y, 5, 5);
+      }
+
       this.makeAction(atm, history.splice(1, history.length-1))
     }).bind(this), history[0].time);
   }
@@ -233,7 +254,7 @@ class ATM extends React.Component {
     };
 
     return (
-      <div className="row middle-xs">
+      <div className="row middle-xs" onMouseMove={this.mouseMove}>
         <div className="col-xs">
           <div className="atm">
             <div className="row center-xs">
