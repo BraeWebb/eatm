@@ -25,7 +25,7 @@ app.all('/*', function(req, res, next) {
   next();
 });
 
-app.get('/sessions', function (req, res) {
+app.get(Config.server_root + 'sessions', function (req, res) {
   db.collection('sessions').find().toArray(function (err, result) {
     if (err) throw err;
 
@@ -33,7 +33,7 @@ app.get('/sessions', function (req, res) {
   })
 });
 
-app.post('/session', function (req, res) {
+app.post(Config.server_root + 'session', function (req, res) {
   db.collection("sessions").insertOne({
     history: req.body.history,
     name: req.body.name,
@@ -43,7 +43,7 @@ app.post('/session', function (req, res) {
   });
 });
 
-app.get('/reset', function (req, res) {
+app.get(Config.server_root + 'reset', function (req, res) {
   db.collection("sessions").drop(function(err, delOK) {
     if (err) throw err;
     if (delOK) console.log("Collection deleted");
