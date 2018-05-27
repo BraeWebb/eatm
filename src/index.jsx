@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import queryString from 'query-string';
 
 import BreadCrumb from './components/BreadCrumb';
 import Key from './components/Key';
@@ -48,6 +49,14 @@ class ATM extends React.Component {
       favourites: [],
       time: new Date()
     };
+
+    let data = decodeURIComponent(location.search);
+    if (data) {
+      data = data.slice(1, data.length);
+      data = JSON.parse(data);
+      this.makeAction(this, data);
+      console.log(data);
+    }
 
     this.history = [this.state];
     this.change = new Date();

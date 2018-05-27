@@ -4,7 +4,6 @@ class Admin extends React.Component {
   constructor(props) {
     super(props);
 
-    this.addSession = this.addSession.bind(this);
     this.replay = this.replay.bind(this);
 
     this.state = {
@@ -18,28 +17,16 @@ class Admin extends React.Component {
       .then(sessions => this.setState({ sessions }));
   }
 
-  addSession() {
-    fetch('http://localhost:8081/session', {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        firstParam: 'yourValue',
-        secondParam: 'yourOtherValue',
-      })
-    })
-  }
-
   replay(event) {
-    console.log(event.target.dataset.history);
+    let session = this.state.sessions[event.target.dataset.id];
+    let query = JSON.stringify(session.history);
+    window.location.href = "/?" + encodeURIComponent(query);
   }
 
   render() {
-    let sessions = this.state.sessions.map((session) => {
+    let sessions = this.state.sessions.map((session, index) => {
       return (
-        <li key={session._id} onClick={this.replay} data-history={session.history}>
+        <li key={session._id} onClick={this.replay} data-id={index}>
           {session.name} @ {session.submitted}
         </li>
       );
