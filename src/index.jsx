@@ -19,6 +19,7 @@ class ATM extends React.Component {
     this.clearInput = this.clearInput.bind(this);
     this.pushScreen = this.pushScreen.bind(this);
     this.popScreen = this.popScreen.bind(this);
+    this.nextCallback = this.nextCallback.bind(this);
     this.goBack = this.goBack.bind(this);
     this.setOk = this.setOk.bind(this);
     this.scanCard = this.scanCard.bind(this);
@@ -107,10 +108,21 @@ class ATM extends React.Component {
     this.setState({screen: crumbs[crumbs.length - 1], crumbs: crumbs});
   }
 
+  nextCallback(screen) {
+    if (screen === "home") {
+      return this.returnHome.bind(this);
+    }
+    return () => {
+      this.pushScreen(screen);
+    }
+  }
+
   returnHome() {
-    let index = this.state.crumbs.indexOf('home');
+    let index = this.state.crumbs.indexOf("home");
     if (index !== -1) {
       this.popScreen(this.state.crumbs.length - index - 1);
+    } else {
+      this.pushScreen("home");
     }
   }
 
@@ -222,7 +234,7 @@ class ATM extends React.Component {
           type="password"
           input={this.state.input}
           ok={this.state.ok}
-          callback={this.setPin} />,
+          callback={this.nextCallback("home")} />,
       home:
         <Screens.HomeScreen
           onContinue={this.pushScreen} />,
@@ -247,6 +259,12 @@ class ATM extends React.Component {
         <Screens.ErrorScreen />,
       withdrawalConfirmation:
         <Screens.ErrorScreen />,
+      balance:
+        <Screens.InfoScreen
+          title="Your account balance is:"
+          info="$103,694.70"
+          callback={this.nextCallback("home")}
+          />,
       help:
         <Screens.YesNoScreen
           prompt="Do you want to be connected to our 24 hour customer support hotline?"

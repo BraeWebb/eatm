@@ -1,5 +1,6 @@
 import ErrorScreen from './ErrorScreen';
 import HomeScreen from './HomeScreen';
+import InfoScreen from './InfoScreen';
 import InputScreen from './InputScreen';
 import LandingScreen from './LandingScreen';
 import OptionScreen from './OptionScreen';
@@ -10,6 +11,7 @@ export {
   ErrorScreen,
   HomeScreen,
   InputScreen,
+  InfoScreen,
   LandingScreen,
   OptionScreen,
   ScanCardScreen,
