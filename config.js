@@ -6,4 +6,6 @@ config.urls = {
   mongo: "mongodb://eatm:trevorsucks@eatm.braewebb.com:27017/eatm"
 };
 
+config.server_root = "/";
+
 module.exports = config;
