@@ -53,8 +53,16 @@
   padding: .5em;
   background-color: #d6d6d6;
   border-radius: .5em .5em 0 0;
-  font-size: .4em;
+  font-size: .32em;
   font-family: 'Orbitron', sans-serif;
+  text-align: left;
+}
+
+.breadcrumbs > .crumb {
+  border-top: .4em solid transparent;
+  border-left: .4em solid #a5a5a5;
+  border-bottom: .4em solid transparent;
+  padding-right: .4em;
 }
 
 .screen > div {
