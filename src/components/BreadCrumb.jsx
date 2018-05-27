@@ -12,7 +12,8 @@ class BreadCrumb extends React.Component {
       withdrawalAccount: "Account",
       withdrawalConfirmation: "Confirm",
       withdrawalFavourite: "Favourite",
-      withdrawalCustom: "Custom"
+      withdrawalCustom: "Custom",
+      balance: "Balance"
     };
   }
 

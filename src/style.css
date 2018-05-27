@@ -80,6 +80,16 @@
   flex: 0 20%;
 }
 
+.title {
+  font-size: 1.5em;
+  margin-bottom: 1em;
+}
+
+.info {
+  font-size: 1.4em;
+  margin-bottom: 1em;
+}
+
 .options {
   display: flex;
   flex-flow: column wrap;
