@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import queryString from 'query-string';
+import Config from '../config';
 
 import BreadCrumb from './components/BreadCrumb';
 import Key from './components/Key';
@@ -171,7 +171,7 @@ class ATM extends React.Component {
 
   submitSession() {
     let name = prompt("Please enter your name");
-    fetch('http://localhost:8081/session', {
+    fetch(Config.urls.make_session, {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
