@@ -25,10 +25,10 @@ class OptionScreen extends React.Component {
     let optionElements = [];
     if (twoColumns) {
       for (let i = 0; i < options.length; i += 2) {
-        optionElements.push(option.call(this, i, "40%"));
+        optionElements.push(option.call(this, i, "48%"));
       }
       for (let i = 1; i < options.length; i += 2) {
-        optionElements.push(option.call(this, i, "40%"));
+        optionElements.push(option.call(this, i, "48%"));
       }
     } else {
       for (let i = 0; i < options.length; i++) {
