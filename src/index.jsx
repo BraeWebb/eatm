@@ -145,7 +145,7 @@ class ATM extends React.Component {
 
   setWithdrawalAccount(to, options) {
     this.setState({account: options[to]});
-    this.pushScreen('withdrawal');
+    this.pushScreen('withdrawalAmount');
   }
 
   setWithdrawal(to, options) {
@@ -246,7 +246,7 @@ class ATM extends React.Component {
           prompt="Choose an account"
           options={withdrawalAccountOptions}
           callback={this.setWithdrawalAccount} />,
-      withdrawal:
+      withdrawalAmount:
         <Screens.OptionScreen
           prompt="Choose an amount"
           options={withdrawalOptions}
@@ -261,7 +261,15 @@ class ATM extends React.Component {
       withdrawalFavourite:
         <Screens.ErrorScreen />,
       withdrawalConfirmation:
-        <Screens.ErrorScreen />,
+        <Screens.YesNoScreen
+          prompts={[
+            "Confirm this withdrawal?",
+            "Amount: " + this.state.amount,
+            "Account: " + this.state.accountType
+          ]}
+          yes="Confirm"
+          no="Go Back"
+          callback={this.callSupport} />,
       balance:
         <Screens.InfoScreen
           title="Your account balance is:"

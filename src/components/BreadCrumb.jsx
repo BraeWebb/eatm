@@ -8,7 +8,7 @@ class BreadCrumb extends React.Component {
       home: "Home",
       help: "Help",
       error: "Error",
-      withdrawal: "Amount",
+      withdrawalAmount: "Amount",
       withdrawalAccount: "Account",
       withdrawalConfirmation: "Confirm",
       withdrawalFavourite: "Favourite",
