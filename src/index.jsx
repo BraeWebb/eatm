@@ -50,13 +50,10 @@ class ATM extends React.Component {
       time: new Date()
     };
 
-    let data = decodeURIComponent(location.search);
-    if (data) {
-      data = data.slice(1, data.length);
-      data = JSON.parse(data);
-      this.makeAction(this, data);
-      console.log(data);
-    }
+    let data = localStorage.getItem('session');
+    localStorage.setItem('session', "[]");
+    data = JSON.parse(data);
+    this.makeAction(this, data);
 
     this.history = [this.state];
     this.change = new Date();

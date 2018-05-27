@@ -21,7 +21,8 @@ class Admin extends React.Component {
   replay(event) {
     let session = this.state.sessions[event.target.dataset.id];
     let query = JSON.stringify(session.history);
-    window.location.href = "/?" + encodeURIComponent(query);
+    localStorage.setItem('session', query);
+    window.location.href = "/";
   }
 
   render() {
