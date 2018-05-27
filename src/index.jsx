@@ -6,6 +6,8 @@ import Key from './components/Key';
 
 import * as Screens from './components/screens';
 
+import Admin from './components/Admin';
+
 import './style.css';
 
 
@@ -25,6 +27,7 @@ class ATM extends React.Component {
     this.setAmount = this.setAmount.bind(this);
     this.callSupport = this.callSupport.bind(this);
     this.replay = this.replay.bind(this);
+    this.submitSession = this.submitSession.bind(this);
 
     // i think this is all we need to keep track of
     this.state = {
@@ -157,6 +160,21 @@ class ATM extends React.Component {
     }).bind(this), history[0].time);
   }
 
+  submitSession() {
+    let name = prompt("Please enter your name");
+    fetch('http://localhost:8081/session', {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        history: this.history,
+        name: name
+      })
+    })
+  }
+
   render() {
     const withdrawalAccountOptions = ['Savings', 'Cheque', 'Credit'];
     const withdrawalOptions = ['$20', '$50', '$100', '$200', 'Custom Amount', 'Favourite Withdrawal'];
@@ -261,7 +279,7 @@ class ATM extends React.Component {
               </div>
             </div>
             <div className="row center-xs">
-              <div className="replay" onClick={this.replay}>Replay</div>
+              <div className="replay" onClick={this.submitSession}>Finish</div>
             </div>
           </div>
         </div>
@@ -270,7 +288,16 @@ class ATM extends React.Component {
   }
 }
 
-ReactDOM.render(
-  <ATM />,
-  document.getElementById('root')
-);
+if(document.getElementById('root')) {
+  ReactDOM.render(
+    <ATM/>,
+    document.getElementById('root')
+  );
+}
+
+if(document.getElementById('admin')) {
+  ReactDOM.render(
+    <Admin/>,
+    document.getElementById('admin')
+  );
+}
