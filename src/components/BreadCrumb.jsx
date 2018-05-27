@@ -27,7 +27,6 @@ class BreadCrumb extends React.Component {
 
     if (start !== -1) {
       crumbs = crumbs.slice(start, crumbs.length);
-      console.log(crumbs);
       crumbs = crumbs.map((crumb, index) => {
         let number = crumbs.length - index - 1;
         let label = crumb;
