@@ -27,8 +27,8 @@ class ATM extends React.Component {
     this.setWithdrawalAccount = this.setWithdrawalAccount.bind(this);
     this.setWithdrawal = this.setWithdrawal.bind(this);
     this.setAmount = this.setAmount.bind(this);
+    this.setLanguage = this.setLanguage.bind(this);
     this.callSupport = this.callSupport.bind(this);
-    this.replay = this.replay.bind(this);
     this.submitSession = this.submitSession.bind(this);
     this.mouseMove = this.mouseMove.bind(this);
 
@@ -49,6 +49,7 @@ class ATM extends React.Component {
       cashInLight: false,
       cashOutLight: false,
       favourites: [],
+      language: 'English',
       time: new Date(),
       position: {x: 0, y: 0}
     };
@@ -169,16 +170,17 @@ class ATM extends React.Component {
     this.pushScreen('withdrawalConfirmation');
   }
 
+  setLanguage(value) {
+    this.setState({language: value});
+    this.returnHome();
+  }
+
   callSupport(call) {
     if (call) {
       this.pushScreen('error');
     } else {
       this.returnHome();
     }
-  }
-
-  replay() {
-    this.makeAction(this, this.history);
   }
 
   makeAction(atm, history) {
@@ -217,6 +219,7 @@ class ATM extends React.Component {
   render() {
     const withdrawalAccountOptions = ['Savings', 'Cheque', 'Credit'];
     const withdrawalOptions = ['$20', '$50', '$100', '$200', 'Custom Amount', 'Favourite Withdrawal'];
+    const languages = ['English', 'Spanish', 'French', 'Chinese', 'Italian', 'Polish'];
     // the array keys are used to identify screens
     const screens = {
       error:
@@ -263,8 +266,12 @@ class ATM extends React.Component {
         <Screens.InfoScreen
           title="Your account balance is:"
           info="$103,694.70"
-          callback={this.nextCallback("home")}
-          />,
+          callback={this.nextCallback("home")} />,
+      language:
+        <Screens.OptionScreen
+          prompt="Choose a language"
+          options={languages}
+          callback={this.setLanguage} />,
       help:
         <Screens.YesNoScreen
           prompt="Do you want to be connected to our 24 hour customer support hotline?"
