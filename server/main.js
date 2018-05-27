@@ -1,11 +1,12 @@
 let MongoClient = require('mongodb').MongoClient;
 let express = require('express');
 let bodyParser = require('body-parser');
+let Config = require('../config');
 
 let app = express();
 let db;
 
-MongoClient.connect('mongodb://eatm:trevorsucks@eatm.braewebb.com:27017/eatm', function (err, client) {
+MongoClient.connect(Config.urls.mongo, function (err, client) {
   if (err) throw err;
 
   db = client.db('eatm');

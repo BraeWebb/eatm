@@ -1,4 +1,5 @@
 import React from "react";
+import Config from '../../config';
 
 class Admin extends React.Component {
   constructor(props) {
@@ -12,7 +13,7 @@ class Admin extends React.Component {
   }
 
   componentDidMount() {
-    fetch('http://localhost:8081/sessions')
+    fetch(Config.urls.list_sessions)
       .then(res => res.json())
       .then(sessions => this.setState({ sessions }));
   }
