@@ -27,7 +27,6 @@ class ATM extends React.Component {
     this.setWithdrawalAccount = this.setWithdrawalAccount.bind(this);
     this.setWithdrawal = this.setWithdrawal.bind(this);
     this.setAmount = this.setAmount.bind(this);
-    this.setLanguage = this.setLanguage.bind(this);
     this.callSupport = this.callSupport.bind(this);
     this.submitSession = this.submitSession.bind(this);
     this.mouseMove = this.mouseMove.bind(this);
@@ -110,12 +109,35 @@ class ATM extends React.Component {
   }
 
   nextCallback(screen) {
-    if (screen === "home") {
-      return this.returnHome.bind(this);
-    }
     return () => {
-      this.pushScreen(screen);
+      let index = this.state.crumbs.indexOf(screen);
+      if (index !== -1) {
+        this.popScreen(this.state.crumbs.length - index - 1);
+      } else {
+        this.pushScreen(screen);
+      }
     }
+  }
+
+  yesNoCallback(yes, no) {
+    return (condition) => {
+      if (condition) {
+        this.nextCallback(yes)();
+      } else {
+        this.nextCallback(no)();
+      }
+    }
+  }
+
+  setValueCallback(property, screen) {
+    return (value) => {
+      let state = {};
+      state[property] = value;
+      this.setState(state);
+      if (screen) {
+        this.nextCallback(screen)();
+      }
+    };
   }
 
   returnHome() {
@@ -257,7 +279,7 @@ class ATM extends React.Component {
           type="amount"
           input={this.state.input}
           ok={this.state.ok}
-          callback={this.setAmount} />,
+          callback={this.setValueCallback('amount', 'withdrawalConfirmation')} />,
       withdrawalFavourite:
         <Screens.ErrorScreen />,
       withdrawalConfirmation:
@@ -269,7 +291,7 @@ class ATM extends React.Component {
           ]}
           yes="Confirm"
           no="Go Back"
-          callback={this.callSupport} />,
+          callback={this.yesNoCallback("error", "withdrawalAmount")} />,
       balance:
         <Screens.InfoScreen
           title="Your account balance is:"
@@ -279,11 +301,11 @@ class ATM extends React.Component {
         <Screens.OptionScreen
           prompt="Choose a language"
           options={languages}
-          callback={this.setLanguage} />,
+          callback={this.setValueCallback('language', 'home')} />,
       help:
         <Screens.YesNoScreen
           prompt="Do you want to be connected to our 24 hour customer support hotline?"
-          callback={this.callSupport} />
+          callback={this.yesNoCallback("error", "home")} />
     };
 
     return (
