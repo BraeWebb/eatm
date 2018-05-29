@@ -13,6 +13,9 @@ class HomeScreen extends React.Component {
       case 0:
         this.props.onContinue('withdrawalAccount');
         break;
+      case 1:
+        this.props.onContinue('deposit');
+        break;
       case 2:
         this.props.onContinue('balance');
         break;

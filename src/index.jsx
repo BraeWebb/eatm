@@ -263,6 +263,8 @@ class ATM extends React.Component {
   render() {
     const withdrawalAccountOptions = ['Savings', 'Cheque', 'Credit'];
     const withdrawalOptions = ['$20', '$50', '$100', '$200', 'Custom Amount', 'Favourite Withdrawal'];
+    const depositAccountOptions = ['Savings', 'Cheque'];
+    const depositMethodOptions = ['Cash', 'Cheque'];
     const transferOptions = ['$20', '$50', '$100', '$200', '$500', 'Custom Amount'];
     const languages = ['English', 'Spanish', 'French', 'Chinese', 'Italian', 'Polish'];
     // the array keys are used to identify screens
@@ -315,6 +317,16 @@ class ATM extends React.Component {
           yes="Confirm"
           no="Go Back"
           callback={this.yesNoCallback("error", -1)} />,
+      deposit:
+        <Screens.OptionScreen
+          prompt="Choose an account"
+          options={depositAccountOptions}
+          callback={this.nextCallback("depositMethod")} />,
+      depositMethod:
+        <Screens.OptionScreen
+          prompt="Choose a method"
+          options={depositMethodOptions}
+          callback={this.setValueCallback("account", "confirmation")} />,
       balance:
         <Screens.InfoScreen
           title="Your account balance is:"
