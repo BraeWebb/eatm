@@ -11,15 +11,6 @@ class InfoScreen extends React.Component {
   }
 
   render() {
-
-    function option(index, width) {
-      return (
-        <div key={index} className="option" style={{"width": width}}>
-          <div className="button" onClick={this.handleClick}>{options[index]}</div>
-        </div>
-      );
-    }
-
     return (
       <div>
         <div className="title">

@@ -305,7 +305,12 @@ class ATM extends React.Component {
       help:
         <Screens.YesNoScreen
           prompt="Do you want to be connected to our 24 hour customer support hotline?"
-          callback={this.yesNoCallback("error", "home")} />
+          callback={this.yesNoCallback("call", "home")} />,
+      call:
+        <Screens.CallScreen
+          title="In Call"
+          info="Duration: "
+          callback={this.nextCallback("home")} />
     };
 
     return (
