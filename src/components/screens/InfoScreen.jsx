@@ -11,6 +11,13 @@ class InfoScreen extends React.Component {
   }
 
   render() {
+    let button = <div/>;
+    if (this.props.callback) {
+      button = (
+        <div className="back">
+          <div className="button" onClick={this.handleClick}>Go Back</div>
+        </div>);
+    }
     return (
       <div>
         <div className="title">
@@ -19,9 +26,7 @@ class InfoScreen extends React.Component {
         <div className="info">
           <p>{this.props.info}</p>
         </div>
-        <div className="back">
-          <div className="button" onClick={this.handleClick}>Go Back</div>
-        </div>
+        {button}
       </div>
     );
   }

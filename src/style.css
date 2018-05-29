@@ -161,6 +161,20 @@ p {
   background-color: #eee;
 }
 
+.reset {
+  width: .2em;
+  height: .2em;
+  border: .02em solid black;
+  border-radius: .1em;
+  background-color: red;
+  position: absolute;
+  bottom: 3em;
+}
+
+.small-text {
+  font-size: 0.2em;
+}
+
 #admin {
   font-size: 5em;
 }

@@ -32,6 +32,7 @@ class ATM extends React.Component {
     this.submitSession = this.submitSession.bind(this);
     this.mouseMove = this.mouseMove.bind(this);
     this.continue = this.continue.bind(this);
+    this.reset = this.reset.bind(this);
 
     // i think this is all we need to keep track of
     this.state = {
@@ -153,6 +154,28 @@ class ATM extends React.Component {
     } else {
       this.pushScreen("home");
     }
+  }
+
+  reset () {
+    this.setState({
+      input: '',
+      screen: 'landing',
+      crumbs: ['landing'],
+      ok: false,
+      card: false,
+      amount: 0,
+      accountType: '',
+      depositType: '',
+      chequeIn: false,
+      cashIn: false,
+      cashOut: false,
+      chequeInLight: false,
+      cashInLight: false,
+      cashOutLight: false,
+      action: '',
+      favourites: [],
+      language: 'English'
+    });
   }
 
   goBack(value) {
@@ -278,9 +301,8 @@ class ATM extends React.Component {
         <Screens.LandingScreen
           onContinue={this.pushScreen} />,
       card:
-        <Screens.ScanCardScreen
-          input={this.state.input}
-          onContinue={this.pushScreen}
+        <Screens.InfoScreen
+          title="Please place your card on the reader"
           continue="pin" />,
       pin:
         <Screens.InputScreen
@@ -415,6 +437,14 @@ class ATM extends React.Component {
               </div>
               <div className="col-xs-3">
                 <div className="scanner" onClick={this.continue} />
+                <div className="row middle-xs">
+                  <div className="col-xs-7">
+                  </div>
+                  <div className="col-xs-2">
+                    <div className="reset" onClick={this.reset} />
+                    <span className="small-text">Reset</span>
+                  </div>
+                </div>
               </div>
             </div>
             <div className="row center-xs">
