@@ -180,6 +180,10 @@ canvas {
   opacity: 0.5;
 }
 
+.field {
+  font-size: .5em;
+}
+
 .cancelBtn {
   background-color: #EF5350;
 }

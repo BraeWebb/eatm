@@ -5,15 +5,14 @@ class BreadCrumb extends React.Component {
     super(props);
     this.crumbClick = this.crumbClick.bind(this);
     this.labels = {
-      home: "Home",
-      help: "Help",
-      error: "Error",
       withdrawalAmount: "Amount",
       withdrawalAccount: "Account",
-      withdrawalConfirmation: "Confirm",
+      confirmation: "Confirm",
       withdrawalFavourite: "Favourite",
       withdrawalCustom: "Custom",
-      balance: "Balance"
+      payid: "Details",
+      bsb: "Details",
+      transferAmount: "Amount"
     };
   }
 
@@ -34,7 +33,7 @@ class BreadCrumb extends React.Component {
           label = this.labels[crumb];
         }
         return <a key={crumb} data-crumb={crumb} data-crumb-number={number}
-                  onClick={this.crumbClick} className="crumb">{label}</a>;
+                  onClick={this.crumbClick} className="crumb">{label.toUpperCase()}</a>;
       });
 
       crumbs = crumbs.slice(Math.max(0, crumbs.length-3), crumbs.length);

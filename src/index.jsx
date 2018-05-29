@@ -26,6 +26,7 @@ class ATM extends React.Component {
     this.setPin = this.setPin.bind(this);
     this.setWithdrawalAccount = this.setWithdrawalAccount.bind(this);
     this.setWithdrawal = this.setWithdrawal.bind(this);
+    this.setTransfer = this.setTransfer.bind(this);
     this.setAmount = this.setAmount.bind(this);
     this.callSupport = this.callSupport.bind(this);
     this.submitSession = this.submitSession.bind(this);
@@ -47,6 +48,7 @@ class ATM extends React.Component {
       chequeInLight: false,
       cashInLight: false,
       cashOutLight: false,
+      action: '',
       favourites: [],
       language: 'English',
       time: new Date(),
@@ -109,6 +111,9 @@ class ATM extends React.Component {
   }
 
   nextCallback(screen) {
+    if (screen === -1) {
+      return this.goBack;
+    }
     return () => {
       let index = this.state.crumbs.indexOf(screen);
       if (index !== -1) {
@@ -171,6 +176,7 @@ class ATM extends React.Component {
   }
 
   setWithdrawal(to, options) {
+    this.setState({action: "withdrawal"});
     switch (to) {
       case 0:
       case 1:
@@ -187,9 +193,25 @@ class ATM extends React.Component {
     }
   }
 
+  setTransfer(to, options) {
+    this.setState({action: "transfer"});
+    switch (to) {
+      case 0:
+      case 1:
+      case 2:
+      case 3:
+      case 4:
+        this.setAmount(options[to]);
+        break;
+      case 5:
+        this.pushScreen('withdrawalCustom');
+        break;
+    }
+  }
+
   setAmount(value) {
     this.setState({amount: value});
-    this.pushScreen('withdrawalConfirmation');
+    this.pushScreen('confirmation');
   }
 
   setLanguage(value) {
@@ -241,6 +263,7 @@ class ATM extends React.Component {
   render() {
     const withdrawalAccountOptions = ['Savings', 'Cheque', 'Credit'];
     const withdrawalOptions = ['$20', '$50', '$100', '$200', 'Custom Amount', 'Favourite Withdrawal'];
+    const transferOptions = ['$20', '$50', '$100', '$200', '$500', 'Custom Amount'];
     const languages = ['English', 'Spanish', 'French', 'Chinese', 'Italian', 'Polish'];
     // the array keys are used to identify screens
     const screens = {
@@ -279,24 +302,55 @@ class ATM extends React.Component {
           type="amount"
           input={this.state.input}
           ok={this.state.ok}
-          callback={this.setValueCallback('amount', 'withdrawalConfirmation')} />,
+          callback={this.setValueCallback('amount', 'confirmation')} />,
       withdrawalFavourite:
         <Screens.ErrorScreen />,
-      withdrawalConfirmation:
+      confirmation:
         <Screens.YesNoScreen
           prompts={[
-            "Confirm this withdrawal?",
+            "Confirm this " + this.state.action + "?",
             "Amount: " + this.state.amount,
             "Account: " + this.state.accountType
           ]}
           yes="Confirm"
           no="Go Back"
-          callback={this.yesNoCallback("error", "withdrawalAmount")} />,
+          callback={this.yesNoCallback("error", -1)} />,
       balance:
         <Screens.InfoScreen
           title="Your account balance is:"
           info="$103,694.70"
           callback={this.nextCallback("home")} />,
+      transfer:
+        <Screens.YesNoScreen
+          prompt="Choose a transfer method"
+          yes="PayID"
+          no="BSB or Account Number"
+          callback={this.yesNoCallback("payid", "bsb")} />,
+      transferAmount:
+        <Screens.OptionScreen
+          prompt="Choose a transfer amount"
+          options={transferOptions}
+          callback={this.setTransfer} />,
+      payid:
+        <Screens.MultipleInputScreen
+          fields={[
+            "Phone Number",
+            "Email Address",
+            "ABN",
+            "Organisation Identifier"
+          ]}
+          input={this.state.input}
+          callback={this.nextCallback("transferAmount")}
+        />,
+      bsb:
+        <Screens.MultipleInputScreen
+          fields={[
+            "BSB",
+            "Account Number"
+          ]}
+          input={this.state.input}
+          callback={this.nextCallback("transferAmount")}
+        />,
       language:
         <Screens.OptionScreen
           prompt="Choose a language"

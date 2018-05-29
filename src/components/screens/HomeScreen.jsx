@@ -16,6 +16,9 @@ class HomeScreen extends React.Component {
       case 2:
         this.props.onContinue('balance');
         break;
+      case 3:
+        this.props.onContinue('transfer');
+        break;
       case 4:
         this.props.onContinue('language');
         break;
