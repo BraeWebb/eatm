@@ -31,6 +31,7 @@ class ATM extends React.Component {
     this.callSupport = this.callSupport.bind(this);
     this.submitSession = this.submitSession.bind(this);
     this.mouseMove = this.mouseMove.bind(this);
+    this.continue = this.continue.bind(this);
 
     // i think this is all we need to keep track of
     this.state = {
@@ -214,16 +215,18 @@ class ATM extends React.Component {
     this.pushScreen('confirmation');
   }
 
-  setLanguage(value) {
-    this.setState({language: value});
-    this.returnHome();
-  }
-
   callSupport(call) {
     if (call) {
       this.pushScreen('error');
     } else {
       this.returnHome();
+    }
+  }
+
+  continue() {
+    let next = this.screen.props.continue;
+    if (next) {
+      this.pushScreen(next);
     }
   }
 
@@ -277,7 +280,8 @@ class ATM extends React.Component {
       card:
         <Screens.ScanCardScreen
           input={this.state.input}
-          onContinue={this.pushScreen} />,
+          onContinue={this.pushScreen}
+          continue="pin" />,
       pin:
         <Screens.InputScreen
           prompt="Please enter your PIN"
@@ -379,6 +383,8 @@ class ATM extends React.Component {
           callback={this.nextCallback("home")} />
     };
 
+    this.screen = screens[this.state.screen];
+
     return (
       <div className="row middle-xs" onMouseMove={this.mouseMove}>
         <div className="col-xs">
@@ -408,7 +414,7 @@ class ATM extends React.Component {
                 />
               </div>
               <div className="col-xs-3">
-                <div className="scanner" onClick={this.scanCard} />
+                <div className="scanner" onClick={this.continue} />
               </div>
             </div>
             <div className="row center-xs">
