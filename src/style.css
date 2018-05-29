@@ -179,3 +179,15 @@ canvas {
   -moz-opacity:0.5;
   opacity: 0.5;
 }
+
+.cancelBtn {
+  background-color: #EF5350;
+}
+
+.clearBtn {
+  background-color: #FFF176;
+}
+
+.okayBtn {
+  background-color: #9CCC65;
+}

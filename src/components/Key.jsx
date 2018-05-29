@@ -12,6 +12,7 @@ class Key extends React.Component {
 
   render() {
     let classes = this.props.keyValue.length > 1 ? 'key small' : 'key';
+    classes = this.props.className ? classes + " " + this.props.className : classes;
     return (
       <div className={classes} onClick={this.handleClick}>{this.props.keyValue}</div>
     );
