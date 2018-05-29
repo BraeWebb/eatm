@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import Config from '../config';
 
 import BreadCrumb from './components/BreadCrumb';
-import Key from './components/Key';
+import KeyPad from "./components/KeyPad";
 
 import * as Screens from './components/screens';
 
@@ -329,32 +329,12 @@ class ATM extends React.Component {
                 <div className="cash-insert" onClick={this.insertCash} />
               </div>
               <div className="col-xs-7">
-                <div className="keypad">
-                  <div className="keypad-row">
-                    <Key keyValue="1" onClick={this.handleInput} />
-                    <Key keyValue="2" onClick={this.handleInput} />
-                    <Key keyValue="3" onClick={this.handleInput} />
-                    <Key keyValue="Cancel" onClick={this.goBack} />
-                  </div>
-                  <div className="keypad-row">
-                    <Key keyValue="4" onClick={this.handleInput} />
-                    <Key keyValue="5" onClick={this.handleInput} />
-                    <Key keyValue="6" onClick={this.handleInput} />
-                    <Key keyValue="Clear" onClick={this.clearInput} />
-                  </div>
-                  <div className="keypad-row">
-                    <Key keyValue="7" onClick={this.handleInput} />
-                    <Key keyValue="8" onClick={this.handleInput} />
-                    <Key keyValue="9" onClick={this.handleInput} />
-                    <Key keyValue="" />
-                  </div>
-                  <div className="keypad-row">
-                    <Key keyValue="" />
-                    <Key keyValue="0" onClick={this.handleInput} />
-                    <Key keyValue="." onClick={this.handleInput} />
-                    <Key keyValue="OK" onClick={this.setOk} />
-                  </div>
-                </div>
+                <KeyPad
+                  numberInput={this.handleInput}
+                  cancel={this.goBack}
+                  clear={this.clearInput}
+                  ok={this.setOk}
+                />
               </div>
               <div className="col-xs-3">
                 <div className="scanner" onClick={this.scanCard} />
