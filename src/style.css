@@ -126,8 +126,10 @@ p {
   font-size: 0.6em;
   width: 100%;
   display: table;
-  border-spacing: 0.45em;
-  margin: 0 auto 0.5em;
+  border-spacing: 0.25em;
+  margin: 0.2em auto 0.5em;
+  border-radius: .2em;
+  background-color: #a5a5a5;
 }
 
 .keypad-row {
@@ -135,7 +137,7 @@ p {
 }
 
 .key {
-  font-size: 1em;
+  font-size: .6em;
   min-width: 25%;
   display: table-cell;
   border: .25vmin solid black;
@@ -153,9 +155,26 @@ p {
   font-size: 0.7em;
 }
 
+.physical-input {
+  width: 100%;
+  margin-top: .2em;
+  background-color: #505050;
+  border: 1px solid #000000;
+  height: .2em;
+}
+
+.coin {
+  height: 1em;
+  margin-top: .8em;
+}
+
+.input-label {
+  font-size: 0.25em;
+}
+
 .scanner {
-  width: 2em;
-  height: 2em;
+  width: 1.5em;
+  height: 1.5em;
   border: .05em solid black;
   border-radius: 1em;
   background-color: #eee;

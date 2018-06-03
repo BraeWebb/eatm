@@ -25,13 +25,12 @@ class KeyPad extends React.Component {
           <Key keyValue="7" onClick={this.props.numberInput} />
           <Key keyValue="8" onClick={this.props.numberInput} />
           <Key keyValue="9" onClick={this.props.numberInput} />
-          <Key keyValue="" />
+          <Key keyValue="OK" className="okayBtn" onClick={this.props.ok} />
         </div>
         <div className="keypad-row">
-          <Key keyValue="" />
+          <Key hidden={true} />
           <Key keyValue="0" onClick={this.props.numberInput} />
           <Key keyValue="." onClick={this.props.numberInput} />
-          <Key keyValue="OK" className="okayBtn" onClick={this.props.ok} />
         </div>
       </div>
     );

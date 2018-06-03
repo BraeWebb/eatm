@@ -341,8 +341,20 @@ class ATM extends React.Component {
             "Account: " + this.state.accountType
           ]}
           yes="Confirm"
-          no="Go Back"
-          callback={this.yesNoCallback("error", -1)} />,
+          no="Cancel"
+          callback={this.yesNoCallback("loading", -1)} />,
+      loading:
+        <Screens.LoadingScreen
+          callback={this.nextCallback("complete")}/>,
+      complete:
+        <Screens.YesNoScreen
+          prompts={[
+            "Transaction Complete",
+            "Please remember to take your belongings"
+          ]}
+          yes="End Session"
+          no="Return Home"
+          callback={this.yesNoCallback("landing", "home")} />,
       deposit:
         <Screens.OptionScreen
           prompt="Choose an account"
@@ -412,6 +424,9 @@ class ATM extends React.Component {
         <div className="col-xs">
           <div className="atm">
             <div className="row center-xs">
+              <div className="col-xs-1">
+                {/*Speaker and mic*/}
+              </div>
               <div className="col-xs-8">
                 <h1 className="bank">Bank<strong>X</strong></h1>
                 <div className="screen">
@@ -419,6 +434,9 @@ class ATM extends React.Component {
                                changeScreen={this.popScreen}/>
                   {screens[this.state.screen]}
                 </div>
+              </div>
+              <div className="col-xs-1">
+                {/*Aux cord*/}
               </div>
             </div>
             <div className="row center-xs">
@@ -434,8 +452,14 @@ class ATM extends React.Component {
                   clear={this.clearInput}
                   ok={this.setOk}
                 />
+                <div className="physical-input" />
+                <div className="input-label">Notes out</div>
+                <div className="physical-input" />
+                <div className="input-label">Notes in</div>
+                <div className="physical-input" />
+                <div className="input-label">Cheque scanner</div>
               </div>
-              <div className="col-xs-3">
+              <div className="col-xs-2">
                 <div className="scanner" onClick={this.continue} />
                 <div className="row middle-xs">
                   <div className="col-xs-7">
@@ -445,11 +469,11 @@ class ATM extends React.Component {
                     <span className="small-text">Reset</span>
                   </div>
                 </div>
+                <div className="physical-input coin" />
+                <div className="input-label">Coins in</div>
               </div>
             </div>
-            <div className="row center-xs">
-              <div className="replay" onClick={this.submitSession}>Finish</div>
-            </div>
+            <span className="small-text" onClick={this.submitSession}>Finish</span>
           </div>
         </div>
       </div>

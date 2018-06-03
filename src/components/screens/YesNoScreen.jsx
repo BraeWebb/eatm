@@ -22,10 +22,10 @@ class YesNoScreen extends React.Component {
         </div>
         <div className="options">
           <div className="option" style={{"width": "40%"}}>
-            <div className="button" onClick={(e) => this.props.callback(true)}>{yes}</div>
+            <div className="button okayBtn" onClick={(e) => this.props.callback(true)}>{yes}</div>
           </div>
           <div className="option" style={{"width": "40%"}}>
-            <div className="button" onClick={(e) => this.props.callback(false)}>{no}</div>
+            <div className="button cancelBtn" onClick={(e) => this.props.callback(false)}>{no}</div>
           </div>
         </div>
       </div>

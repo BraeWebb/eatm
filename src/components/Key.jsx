@@ -11,6 +11,9 @@ class Key extends React.Component {
   }
 
   render() {
+    if (this.props.hidden) {
+      return (<div/>);
+    }
     let classes = this.props.keyValue.length > 1 ? 'key small' : 'key';
     classes = this.props.className ? classes + " " + this.props.className : classes;
     return (
